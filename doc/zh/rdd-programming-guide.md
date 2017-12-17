@@ -49,27 +49,25 @@ import org.apache.spark.SparkConf
 
 <div data-lang="java"  markdown="1">
 
-Spark {{site.SPARK_VERSION}} supports
-[lambda expressions](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
-for concisely writing functions, otherwise you can use the classes in the
-[org.apache.spark.api.java.function](api/java/index.html?org/apache/spark/api/java/function/package-summary.html) package.
+Spark {{site.SPARK_VERSION}} 支持
+[lambda expressions](http://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html) (lambda表达式)让函数的书写更加简洁，否则你只能使用
+[org.apache.spark.api.java.function](api/java/index.html?org/apache/spark/api/java/function/package-summary.html) 包中的类.
 
-Note that support for Java 7 was removed in Spark 2.2.0.
+注意在Spark 2.2.0中已经移除对Java7的支持.
 
-To write a Spark application in Java, you need to add a dependency on Spark. Spark is available through Maven Central at:
+使用Java编写一个 Spark 的应用程序，您需要添加Spark相关依赖。Spark 可以通过 Maven 中央仓库获取:
 
     groupId = org.apache.spark
     artifactId = spark-core_{{site.SCALA_BINARY_VERSION}}
     version = {{site.SPARK_VERSION}}
 
-In addition, if you wish to access an HDFS cluster, you need to add a dependency on
-`hadoop-client` for your version of HDFS.
+此外，如果您想访问一个 HDFS 集群，则需要针对您的 HDFS 版本添加一个 `hadoop-client`（hadoop 客户端）依赖。
 
     groupId = org.apache.hadoop
     artifactId = hadoop-client
     version = <your-hdfs-version>
 
-Finally, you need to import some Spark classes into your program. Add the following lines:
+最后，您需要导入一些 Spark classes（类）到您的程序中去。添加下面几行:
 
 {% highlight java %}
 import org.apache.spark.api.java.JavaSparkContext;
@@ -81,28 +79,28 @@ import org.apache.spark.SparkConf;
 
 <div data-lang="python"  markdown="1">
 
-Spark {{site.SPARK_VERSION}} works with Python 2.6+ or Python 3.4+. It can use the standard CPython interpreter,
-so C libraries like NumPy can be used. It also works with PyPy 2.3+.
+Spark {{site.SPARK_VERSION}} 支持 Python 2.6+ 或Python 3.4+. 它可以使用标准的CPython实例，如Numpy等C 语言的库。它也支持PyPy 2.3+。
 
-Note that support for Python 2.6 is deprecated as of Spark 2.0.0, and may be removed in Spark 2.2.0.
+注意: 在Spark 2.0.0中不推荐使用Python2.6，Spark 2.2.0已经被不再支持Python2.6。
 
-To run Spark applications in Python, use the `bin/spark-submit` script located in the Spark directory.
-This script will load Spark's Java/Scala libraries and allow you to submit applications to a cluster.
-You can also use `bin/pyspark` to launch an interactive Python shell.
+在Python需要使用 Spark目录下的 `bin/spark-submit` 脚本来提交Spark应用。这个脚本会载入Spark 的Java/Scala 库并允许你提交应用到集群上。
+
+你也可以使用  `bin/pyspark` 来启动一个Python 的交互式界面。
 
 If you wish to access HDFS data, you need to use a build of PySpark linking
 to your version of HDFS.
 [Prebuilt packages](http://spark.apache.org/downloads.html) are also available on the Spark homepage
 for common HDFS versions.
 
-Finally, you need to import some Spark classes into your program. Add the following line:
+如果你想连接HDFS 数据，你需要使用编译一个您所接入HDFS版本的PySpark.在Spark官网中[Prebuilt packages](http://spark.apache.org/downloads.html) (预先编译好的包)获取会有您所需要HDFS公共版本。
+
+最后，您需要在您的代码中引入一些Spark类文件。增加以下几行：
 
 {% highlight python %}
 from pyspark import SparkContext, SparkConf
 {% endhighlight %}
 
-PySpark requires the same minor version of Python in both driver and workers. It uses the default python version in PATH,
-you can specify which version of Python you want to use by `PYSPARK_PYTHON`, for example:
+PySpark需要驱动端和工作端使用相同版本的Python版本。Spark会默认使用PATH变量中的python版本，您可以通过 `PYSPARK_PYTHON` 来指定您所需要的Python版本，例如:
 
 {% highlight bash %}
 $ PYSPARK_PYTHON=python3.4 bin/pyspark
