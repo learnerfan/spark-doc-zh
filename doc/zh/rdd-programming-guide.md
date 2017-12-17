@@ -10,19 +10,19 @@ description: Java, Scala 和 Python 版本的 Spark SPARK_VERSION_SHORT 编程�
 
 # 概述
 
-在一个较高的概念上来说，每一个 Spark 应用程序由一个在集群上运行着用户的 `main` 函数和执行各种并行操作的 *driver program*（驱动程序）组成。Spark 提供的主要抽象是一个*弹性分布式数据集*（RDD），它是可以执行并行操作且跨集群节点的元素的集合。RDD 可以从一个 Hadoop 文件系统（或者任何其它 Hadoop 支持的文件系统），或者一个在 driver program（驱动程序）中已存在的 Scala 集合，以及通过 transforming（转换）来创建一个 RDD。用户为了让它在整个并行操作中更高效的重用，也许会让 Spark persist（持久化）一个 RDD 到内存中。最后，RDD 会自动的从节点故障中恢复。
+在一个较高的概念上来说，每个spark应用包含一个运行着用户 `main` 函数的驱动器和在集群上执行各种并行操作的执行器。Spark 中最主要的抽象概念是*弹性分布式数据集*（RDD），该集合中的元素在集群中的节点上分区存储，因此它可以被并行操作。RDD 可以从一个 Hadoop 文件系统（或者任何其它 Hadoop 支持的文件系统）创建，也可以通过驱动程序中的 Scala 集合转换而来。使用者将RDD缓存在spark内存中，可以在并行操作的过程中更加高效的使用RDD。不仅如此，RDD可以从失败的节点中自动恢复。 
 
-在 Spark 中的第二个抽象是能够用于并行操作的 *shared variables*（共享变量），默认情况下，当 Spark 的一个函数作为一组不同节点上的任务运行时，它将每一个变量的副本应用到每一个任务的函数中去。有时候，一个变量需要在整个任务中，或者在任务和 driver program（驱动程序）之间来共享。Spark 支持两种类型的共享变量 : *broadcast variables*（广播变量），它可以用于在所有节点上缓存一个值，和 *accumulators*（累加器），他是一个只能被 “added（增加）” 的变量，例如 counters 和 sums。
+Spark 的第二个抽象shared variables（共享变量）,它可以在并行操作中作为全局变量使用。默认情况下，当 Spark 的一个函数作为一组不同节点上的任务运行时，它将函数中使用的变量副本发送到每一个任务节点中。有时候，一个变量需要在整个任务中，或者在任务和 driver program（驱动程序）之间来共享。Spark 支持两种类型的共享变量 : 可以在所有节点缓存一个值的 *broadcast variables*（广播变量）和只能被 “added（增加）” 的 *accumulators*（累加器），例如 counters 和 sums。
 
 本指南介绍了每一种 Spark 所支持的语言的特性。如果您启动 Spark 的交互式 shell - 针对 Scala shell 使用 `bin/spark-shell` 或者针对 Python 使用 `bin/pyspark` 是很容易来学习的。
 
-# Spark 依赖
+# 引入Spark 
 
 <div class="codetabs">
 
 <div data-lang="scala"  markdown="1">
 
-Spark {{site.SPARK_VERSION}} 默认使用 Scala {{site.SCALA_BINARY_VERSION}} 来构建和发布直到运行。（当然，Spark 也可以与其它的 Scala 版本一起运行）。为了使用 Scala 编写应用程序，您需要使用可兼容的 Scala 版本（例如，{{site.SCALA_BINARY_VERSION}}.X）。
+Spark {{site.SPARK_VERSION}} 默认使用 Scala {{site.SCALA_BINARY_VERSION}} 来构建和分发。（当然，Spark 也可以使用其它版本的 Scala 进行构建）。为了使用 Scala 编写应用程序，您需要使用可兼容的 Scala 版本（例如，{{site.SCALA_BINARY_VERSION}}.X）。
 
 要编写一个 Spark 的应用程序，您需要在 Spark 上添加一个 Maven 依赖。Spark 可以通过 Maven 中央仓库获取:
 
@@ -371,7 +371,7 @@ Text file RDDs can be created using `SparkContext`'s `textFile` method. This met
 
 {% highlight python %}
 >>> distFile = sc.textFile("data.txt")
-{% endhighlight %}
+>>> {% endhighlight %}
 
 Once created, `distFile` can be acted on by dataset operations. For example, we can add up the sizes of all the lines using the `map` and `reduce` operations as follows: `distFile.map(lambda s: len(s)).reduce(lambda a, b: a + b)`.
 
@@ -426,8 +426,8 @@ classes can be specified, but for standard Writables this is not required.
 >>> rdd = sc.parallelize(range(1, 4)).map(lambda x: (x, "a" * x))
 >>> rdd.saveAsSequenceFile("path/to/file")
 >>> sorted(sc.sequenceFile("path/to/file").collect())
-[(1, u'a'), (2, u'aa'), (3, u'aaa')]
-{% endhighlight %}
+>>> [(1, u'a'), (2, u'aa'), (3, u'aaa')]
+>>> {% endhighlight %}
 
 **Saving and Loading Other Hadoop Input/Output Formats**
 
@@ -443,11 +443,11 @@ $ ./bin/pyspark --jars /path/to/elasticsearch-hadoop.jar
                              "org.elasticsearch.hadoop.mr.LinkedMapWritable",
                              conf=conf)
 >>> rdd.first()  # the result is a MapWritable that is converted to a Python dict
-(u'Elasticsearch ID',
- {u'field1': True,
-  u'field2': u'Some Text',
-  u'field3': 12345})
-{% endhighlight %}
+>>> (u'Elasticsearch ID',
+>>>  {u'field1': True,
+>>>   u'field2': u'Some Text',
+>>>   u'field3': 12345})
+>>> {% endhighlight %}
 
 Note that, if the InputFormat simply depends on a Hadoop configuration and/or input path, and
 the key and value classes can easily be converted according to the above table,
@@ -678,7 +678,7 @@ if __name__ == "__main__":
     def myFunc(s):
         words = s.split(" ")
         return len(words)
-
+    
     sc = SparkContext(...)
     sc.textFile("file.txt").map(myFunc)
 {% endhighlight %}
@@ -1146,7 +1146,7 @@ Spark 的存储级别的选择，核心问题是在 memory 内存使用率和 CP
 * 不要溢出到磁盘，除非计算您的数据集的函数是昂贵的, 或者它们过滤大量的数据. 否则, 重新计算分区可能与从磁盘读取分区一样快.
 
 * 如果需要快速故障恢复，请使用复制的存储级别 (e.g. 如果使用Spark来服务
-来自网络应用程序的请求). *All* 存储级别通过重新计算丢失的数据来提供完整的容错能力，但复制的数据可让您继续在 RDD 上运行任务，而无需等待重新计算一个丢失的分区.
+  来自网络应用程序的请求). *All* 存储级别通过重新计算丢失的数据来提供完整的容错能力，但复制的数据可让您继续在 RDD 上运行任务，而无需等待重新计算一个丢失的分区.
 
 
 ### 删除数据
@@ -1194,11 +1194,11 @@ broadcastVar.value();
 
 {% highlight python %}
 >>> broadcastVar = sc.broadcast([1, 2, 3])
-<pyspark.broadcast.Broadcast object at 0x102789f10>
+>>> <pyspark.broadcast.Broadcast object at 0x102789f10>
 
 >>> broadcastVar.value
-[1, 2, 3]
-{% endhighlight %}
+>>> [1, 2, 3]
+>>> {% endhighlight %}
 
 </div>
 
@@ -1336,15 +1336,15 @@ The code below shows an accumulator being used to add up the elements of an arra
 {% highlight python %}
 >>> accum = sc.accumulator(0)
 >>> accum
-Accumulator<id=0, value=0>
+>>> Accumulator<id=0, value=0>
 
 >>> sc.parallelize([1, 2, 3, 4]).foreach(lambda x: accum.add(x))
-...
-10/09/29 18:41:08 INFO SparkContext: Tasks finished in 0.317106 s
+>>> ...
+>>> 10/09/29 18:41:08 INFO SparkContext: Tasks finished in 0.317106 s
 
 >>> accum.value
-10
-{% endhighlight %}
+>>> 10
+>>> {% endhighlight %}
 
 While this code used the built-in support for accumulators of type Int, programmers can also
 create their own types by subclassing [AccumulatorParam](api/python/pyspark.html#pyspark.AccumulatorParam).
@@ -1356,7 +1356,7 @@ representing mathematical vectors, we could write:
 class VectorAccumulatorParam(AccumulatorParam):
     def zero(self, initialValue):
         return Vector.zeros(initialValue.size)
-
+    
     def addInPlace(self, v1, v2):
         v1 += v2
         return v1
