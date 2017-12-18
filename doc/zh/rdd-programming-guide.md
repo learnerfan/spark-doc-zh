@@ -163,19 +163,19 @@ sc = SparkContext(conf=conf)
 
 <div data-lang="scala"  markdown="1">
 
-在 Spark Shell 中，已经创建好了一个特殊的可用的解析器SparkContext ，它就是变量 `sc`。创建您自己的 SparkContext 将不起作用。您可以使用 `--master` 参数设置这个 SparkContext 连接到哪一个 master 上，并且您可以通过 `--jars` 参数传递一个逗号分隔的列表来添加 JARs 到 classpath 中。也可以通过 `--packages` 参数应用一个用逗号分隔的 maven coordinates（maven 坐标）方式来添加依赖（例如，Spark 包）到您的 shell session 中去。任何额外存在且依赖的仓库（例如 Sonatype）可以传递到 `--repositories` 参数。例如，要明确使用四个核（CPU）来运行 `bin/spark-shell`，使用:
+在 Spark Shell 中，已经创建好了一个特殊的可用的解析器SparkContext ，它就是变量 `sc`。创建您自己的 SparkContext 将不起作用。您可以使用 `--master` 参数设置这个 SparkContext 连接到哪一个 master 上，并且您可以通过 `--jars` 参数传递一个逗号分隔的列表来添加 JARs 到 classpath 中。也可以通过 `--packages` 参数应用一个用逗号分隔的 maven coordinates（maven 坐标）方式来添加依赖（例如，Spark 包）到您的 shell session 中去。任何额外存在且依赖的仓库（例如 Sonatype）可以通过 `--repositories` 参数传递。例如，要明确指定四个核（CPU）来运行 `bin/spark-shell`，使用:
 
 {% highlight bash %}
 $ ./bin/spark-shell --master local[4]
 {% endhighlight %}
 
-或者, 也可以添加 `code.jar` 到它的 classpath 中去, 使用:
+或者, 添加 `code.jar` 到它的 classpath 中去, 使用:
 
 {% highlight bash %}
 $ ./bin/spark-shell --master local[4] --jars code.jar
 {% endhighlight %}
 
-为了包含一个依赖，使用 Maven 坐标:
+使用 Maven 坐标来引入一个依赖:
 
 {% highlight bash %}
 $ ./bin/spark-shell --master local[4] --packages "org.example:example:0.1"
@@ -198,38 +198,42 @@ can be passed to the `--repositories` argument. Any Python dependencies a Spark 
 the requirements.txt of that package) must be manually installed using `pip` when necessary.
 For example, to run `bin/pyspark` on exactly four cores, use:
 
+在 PySpark Shell 中，已经创建好了一个特殊的可用的解析器SparkContext ，它就是变量 `sc`。创建您自己的 SparkContext 将不起作用。您可以使用 `--master` 参数设置这个 SparkContext 连接到哪一个 master 上，并且您可以通过--py-files将Python的.zip,.egg或 .py文件以逗号分隔的方式传入spark的运行环境中。也可以通过 `--packages` 参数应用一个用逗号分隔的 maven coordinates（maven 坐标）方式来添加依赖（例如，Spark 包）到您的 shell session 中去。任何额外存在且依赖的仓库（例如 Sonatype）可以通过 `--repositories` 参数传递。例如，要明确指定四个核（CPU）来运行 `bin/spark-shell`，使用:
+
 {% highlight bash %}
 $ ./bin/pyspark --master local[4]
 {% endhighlight %}
 
-Or, to also add `code.py` to the search path (in order to later be able to `import code`), use:
+
+
+或者, 添加 `code.jar` 到它的 classpath 中去, 使用:
 
 {% highlight bash %}
 $ ./bin/pyspark --master local[4] --py-files code.py
 {% endhighlight %}
 
-For a complete list of options, run `pyspark --help`. Behind the scenes,
-`pyspark` invokes the more general [`spark-submit` script](submitting-applications.html).
+有关选项的完整列表, 请运行 `pyspark --help`. 在幕后,
+`pyspark `调用了常用的 [`spark-submit` 脚本](submitting-applications.html).
 
-It is also possible to launch the PySpark shell in [IPython](http://ipython.org), the
-enhanced Python interpreter. PySpark works with IPython 1.0.0 and later. To
-use IPython, set the `PYSPARK_DRIVER_PYTHON` variable to `ipython` when running `bin/pyspark`:
+使用增强版的Python解释器 [IPython](http://ipython.org) 来发布PySpark是可行的。PySpark支持Ipython 1.0.0 或更高版本。如果您想使用Ipython，需要在运行 `bin/pyspark` 时设置`ipython`的`PYSPARK_DRIVER_PYTHON` 变量：
 
 {% highlight bash %}
 $ PYSPARK_DRIVER_PYTHON=ipython ./bin/pyspark
 {% endhighlight %}
 
-To use the Jupyter notebook (previously known as the IPython notebook),
+使用Jupyter notebook(以前被视为IPython notebook) 需要做如下配置:
 
 {% highlight bash %}
 $ PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS=notebook ./bin/pyspark
 {% endhighlight %}
 
-You can customize the `ipython` or `jupyter` commands by setting `PYSPARK_DRIVER_PYTHON_OPTS`.
+您可以通过 `PYSPARK_DRIVER_PYTHON_OPTS` 来定制  `ipython`  或  `jupyter` 的命令窗口。
 
 After the Jupyter Notebook server is launched, you can create a new "Python 2" notebook from
 the "Files" tab. Inside the notebook, you can input the command `%pylab inline` as part of
 your notebook before you start to try Spark from the Jupyter notebook.
+
+Jupyter Notebook服务启动起来后，您可以从文件栏中创建第二个 Python notebook。在这个notebook中，从Jupyter notebook中尝试spark之前，你可以输入 `%pylab inline` 命令作为你的notebook的一部分。
 
 </div>
 
