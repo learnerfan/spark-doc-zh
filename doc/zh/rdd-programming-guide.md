@@ -121,7 +121,7 @@ $ PYSPARK_PYTHON=/opt/pypy-2.5/bin/pypy bin/spark-submit examples/src/main/pytho
 Spark 程序必须做的第一件事情是创建一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext) 对象，它会告诉 Spark 如何访问集群。要创建一个 `SparkContext`，首先需要构建一个包含应用程序的信息的 [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) 对象。
 
 
-每一个 JVM 可能只能激活一个 SparkContext 对象。在创新一个新的对象之前，必须调用 `stop()` 该方法停止活跃的 SparkContext。
+每一个 JVM 只能激活一个 SparkContext 对象。在创新一个新的对象之前，必须调用 `stop()` 该方法停止活跃的 SparkContext。
 
 {% highlight scala %}
 val conf = new SparkConf().setAppName(appName).setMaster(master)
@@ -132,9 +132,7 @@ new SparkContext(conf)
 
 <div data-lang="java"  markdown="1">
 
-The first thing a Spark program must do is to create a [JavaSparkContext](api/java/index.html?org/apache/spark/api/java/JavaSparkContext.html) object, which tells Spark
-how to access a cluster. To create a `SparkContext` you first need to build a [SparkConf](api/java/index.html?org/apache/spark/SparkConf.html) object
-that contains information about your application.
+Spark 程序必须做的第一件事情是创建一个 [JavaSparkContext](api/scala/index.html#org.apache.spark.SparkContext) 对象，它会告诉 Spark 如何访问集群。要创建一个 `SparkContext`，首先需要构建一个包含应用程序的信息的 [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) 对象。
 
 {% highlight java %}
 SparkConf conf = new SparkConf().setAppName(appName).setMaster(master);
@@ -145,9 +143,7 @@ JavaSparkContext sc = new JavaSparkContext(conf);
 
 <div data-lang="python"  markdown="1">
 
-The first thing a Spark program must do is to create a [SparkContext](api/python/pyspark.html#pyspark.SparkContext) object, which tells Spark
-how to access a cluster. To create a `SparkContext` you first need to build a [SparkConf](api/python/pyspark.html#pyspark.SparkConf) object
-that contains information about your application.
+Spark 程序必须做的第一件事情是创建一个 [SparkContext](api/scala/index.html#org.apache.spark.SparkContext) 对象，它会告诉 Spark 如何访问集群。要创建一个 `SparkContext`，首先需要构建一个包含应用程序的信息的 [SparkConf](api/scala/index.html#org.apache.spark.SparkConf) 对象。
 
 {% highlight python %}
 conf = SparkConf().setAppName(appName).setMaster(master)
@@ -158,7 +154,7 @@ sc = SparkContext(conf=conf)
 
 </div>
 
-这个 `appName` 参数是一个在集群 UI 上展示应用程序的名称。 `master` 是一个 [Spark, Mesos 或 YARN 的 cluster URL](submitting-applications.html#master-urls)，或者指定为在 local mode（本地模式）中运行的 "local" 字符串。在实际工作中，当在集群上运行时，您不希望在程序中将 master 给硬编码，而是用 [使用 `spark-submit` 启动应用](submitting-applications.html) 并且接收它。然而，对于本地测试和单元测试，您可以通过 "local" 来运行 Spark 进程。
+参数 `appName` 是你的应用程序在集群 UI 上显示的名称。 `master` 是一个 [Spark, Mesos 或 YARN集群的URL](submitting-applications.html#master-urls)，它也可以用“local”字符串表示在 local mode（本地模式）中运行。在实际工作中，当在集群上运行时，您可以不必将master在程序中写死，而是用`spark-submit` 启动应用(submitting-applications.html) 时作为参数传入。当然，对于本地测试和单元测试，您直接通过 "local" 来运行 Spark 进程。
 
 
 ## 使用 Shell
@@ -167,7 +163,7 @@ sc = SparkContext(conf=conf)
 
 <div data-lang="scala"  markdown="1">
 
-在 Spark Shell 中，一个特殊的 interpreter-aware（可用的解析器）SparkContext 已经为您创建好了，称之为 `sc` 的变量。创建您自己的 SparkContext 将不起作用。您可以使用 `--master` 参数设置这个 SparkContext 连接到哪一个 master 上，并且您可以通过 `--jars` 参数传递一个逗号分隔的列表来添加 JARs 到 classpath 中。也可以通过 `--packages` 参数应用一个用逗号分隔的 maven coordinates（maven 坐标）方式来添加依赖（例如，Spark 包）到您的 shell session 中去。任何额外存在且依赖的仓库（例如 Sonatype）可以传递到 `--repositories` 参数。例如，要明确使用四个核（CPU）来运行 `bin/spark-shell`，使用:
+在 Spark Shell 中，已经创建好了一个特殊的可用的解析器SparkContext ，它就是变量 `sc`。创建您自己的 SparkContext 将不起作用。您可以使用 `--master` 参数设置这个 SparkContext 连接到哪一个 master 上，并且您可以通过 `--jars` 参数传递一个逗号分隔的列表来添加 JARs 到 classpath 中。也可以通过 `--packages` 参数应用一个用逗号分隔的 maven coordinates（maven 坐标）方式来添加依赖（例如，Spark 包）到您的 shell session 中去。任何额外存在且依赖的仓库（例如 Sonatype）可以传递到 `--repositories` 参数。例如，要明确使用四个核（CPU）来运行 `bin/spark-shell`，使用:
 
 {% highlight bash %}
 $ ./bin/spark-shell --master local[4]
