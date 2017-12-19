@@ -233,7 +233,7 @@ After the Jupyter Notebook server is launched, you can create a new "Python 2" n
 the "Files" tab. Inside the notebook, you can input the command `%pylab inline` as part of
 your notebook before you start to try Spark from the Jupyter notebook.
 
-Jupyter Notebook服务启动起来后，您可以从文件栏中创建第二个 Python notebook。在这个notebook中，从Jupyter notebook中尝试spark之前，你可以输入 `%pylab inline` 命令作为你的notebook的一部分。
+Jupyter Notebook服务启动起来后，您可以从文件栏中创建第二个 Python notebook。在这个notebook中，从Jupyter notebook中尝试spark之前，你可以输入 `%pylab inline` 命令作为你的notebook的一部分，在你
 
 </div>
 
@@ -249,48 +249,46 @@ Spark 主要以一个 _弹性分布式数据集_（RDD）的概念为中心，�
 
 <div data-lang="scala"  markdown="1">
 
-可以在您的 driver program (a Scala `Seq`) 中已存在的集合上通过调用  `SparkContext` 的 `parallelize` 方法来创建并行集合。该集合的元素从一个可以并行操作的 distributed dataset（分布式数据集）中复制到另一个 dataset（数据集）中去。例如，这里是一个如何去创建一个保存数字 1 ~ 5 的并行集合。
+可以在您的驱动程序(a Scala `Seq`) 中已存在的集合上通过调用  `SparkContext` 的 `parallelize` 方法来创建并行集合。该集合的元素从一个可以并行操作的 distributed dataset（分布式数据集）中复制到另一个 dataset（数据集）中去。下面我们展示一个如何去创建包含数字 1 ~ 5 并行集合的例子：
 
 {% highlight scala %}
 val data = Array(1, 2, 3, 4, 5)
 val distData = sc.parallelize(data)
 {% endhighlight %}
 
-在创建后，该 distributed dataset（分布式数据集）（`distData`）可以并行的执行操作。例如，我们可以调用 `distData.reduce((a, b) => a + b`) 来合计数组中的元素。后面我们将介绍 distributed dataset（分布式数据集）上的操作。
+分布式数据集（`distData`）一旦被创建，就可以被并行操作。例如，我们可以调用 `distData.reduce((a, b) => a + b`) 来累加数组中的元素。稍后我们会介绍分布式数据集上的操作。
 
 </div>
 
 <div data-lang="java"  markdown="1">
 
-Parallelized collections are created by calling `JavaSparkContext`'s `parallelize` method on an existing `Collection` in your driver program. The elements of the collection are copied to form a distributed dataset that can be operated on in parallel. For example, here is how to create a parallelized collection holding the numbers 1 to 5:
+在驱动程序中通过调用`JavaSparkContext`' 的`parallelize` 方法可以将一个以存在的集合转化为并行集合。 该集合的元素从一个可以并行操作的 distributed dataset（分布式数据集）中复制到另一个 dataset（数据集）中去。下面我们展示一个如何去创建包含数字 1 ~ 5 并行集合的例子：
 
 {% highlight java %}
 List<Integer> data = Arrays.asList(1, 2, 3, 4, 5);
 JavaRDD<Integer> distData = sc.parallelize(data);
 {% endhighlight %}
 
-Once created, the distributed dataset (`distData`) can be operated on in parallel. For example, we might call `distData.reduce((a, b) -> a + b)` to add up the elements of the list.
-We describe operations on distributed datasets later on.
+分布式数据集（`distData`）一旦被创建，就可以被并行操作。例如，我们可以调用 `distData.reduce((a, b) => a + b`) 来累加数组中的元素。稍后我们会介绍分布式数据集上的操作。
 
 </div>
 
 <div data-lang="python"  markdown="1">
 
-Parallelized collections are created by calling `SparkContext`'s `parallelize` method on an existing iterable or collection in your driver program. The elements of the collection are copied to form a distributed dataset that can be operated on in parallel. For example, here is how to create a parallelized collection holding the numbers 1 to 5:
+可以在您的驱动程序(a Scala `Seq`) 中已存在的集合上通过调用  `SparkContext` 的 `parallelize` 方法来创建并行集合。该集合的元素从一个可以并行操作的 distributed dataset（分布式数据集）中复制到另一个 dataset（数据集）中去。下面我们展示一个如何去创建包含数字 1 ~ 5 并行集合的例子：
 
 {% highlight python %}
 data = [1, 2, 3, 4, 5]
 distData = sc.parallelize(data)
 {% endhighlight %}
 
-Once created, the distributed dataset (`distData`) can be operated on in parallel. For example, we can call `distData.reduce(lambda a, b: a + b)` to add up the elements of the list.
-We describe operations on distributed datasets later on.
+分布式数据集（`distData`）一旦被创建，就可以被并行操作。例如，我们可以调用 `distData.reduce((a, b) => a + b`) 来累加数组中的元素。稍后我们会介绍分布式数据集上的操作。
 
 </div>
 
 </div>
 
-并行集合中一个很重要参数是 *partitions*（分区）的数量，它可用来切割 dataset（数据集）。Spark 将在集群中的每一个分区上运行一个任务。通常您希望群集中的每一个 CPU 计算 2-4 个分区。一般情况下，Spark 会尝试根据您的群集情况来自动的设置的分区的数量。当然，您也可以将分区数作为第二个参数传递到 `parallelize` (e.g. `sc.parallelize(data, 10)`) 方法中来手动的设置它。注意: 代码中的一些地方会使用 term slices (a synonym for partitions) 以保持向后兼容.
+并行集合中一个很重要参数是 *partitions*（分区）的数量，它会对数据集进行切割。Spark 将在集群中的每一个分区上运行一个任务。通常您希望群集中的每一个 CPU 计算 2-4 个分区。一般情况下，Spark 会尝试根据您的群集情况来自动的设置的分区的数量。当然，您也可以将分区数作为第二个参数传递到 `parallelize` (e.g. `sc.parallelize(data, 10)`) 方法中来手动的设置它。注意: 代码中的一些地方会使用 term slices (a synonym for partitions) 以保持向后兼容.
 
 ## 外部 Datasets（数据集）
 
